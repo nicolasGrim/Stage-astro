@@ -1,0 +1,802 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage[utf8]{inputenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for grffile with XeLaTeX
+    \def\Gread@@xetex#1{%
+      \IfFileExists{"\Gin@base".bb}%
+      {\Gread@eps{\Gin@base.bb}}%
+      {\Gread@@xetex@aux#1}%
+    }
+    \makeatother
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Calcul dates d'observation du boo}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        \ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{200}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{from} \PY{n+nn}{astropy}\PY{n+nn}{.}\PY{n+nn}{time} \PY{k+kn}{import} \PY{n}{Time}\PY{p}{,} \PY{n}{TimeDelta}
+\PY{k+kn}{from} \PY{n+nn}{astropy}\PY{n+nn}{.}\PY{n+nn}{coordinates} \PY{k+kn}{import} \PY{n}{EarthLocation}
+\PY{k+kn}{from} \PY{n+nn}{astropy} \PY{k+kn}{import} \PY{n}{units} \PY{k}{as} \PY{n}{u}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{from} \PY{n+nn}{astroplan} \PY{k+kn}{import} \PY{p}{(}\PY{n}{FixedTarget}\PY{p}{,} \PY{n}{Observer}\PY{p}{,} 
+                       \PY{n}{AltitudeConstraint}\PY{p}{,} \PY{n}{AtNightConstraint}\PY{p}{,} 
+                       \PY{n}{MoonSeparationConstraint}\PY{p}{)}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{from} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{ticker} \PY{k+kn}{import} \PY{p}{(}\PY{n}{MultipleLocator}\PY{p}{,} \PY{n}{FormatStrFormatter}\PY{p}{,}
+                               \PY{n}{AutoMinorLocator}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{datetime} \PY{k+kn}{import} \PY{n}{datetime}
+\PY{n}{plt}\PY{o}{.}\PY{n}{rcParams}\PY{o}{.}\PY{n}{update}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{font.size}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+m+mi}{22}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On définit une fonction contraintes, basé sur les librairies astropy et
+astroplan, qui nous permet de connaître les dates auxquelles il est
+possible d'observer une certaine phase de notre étoile en fonction de
+contraintes que l'on souhaite imposer :
+
+\begin{verbatim}
+-Il fait nuit    
+-L'étoile est à un angle supérieur à 30° de l'horizon    
+-L'étoile est à un angle supérieur à 30° de la lune
+\end{verbatim}
+
+On entre les coordonnées de l'observatoire (New mexico skies), ainsi que
+le nom de l'étoile que l'on souhaite observer, puis l'on crée un tableau
+au format Time qui contient les `amount' prochaines dates auxquelles
+l'étoile est aux différentes phases demandées. On vérifie en même temps
+que les contraintes soient respectées. Si les contraintes sont
+respectées, la date est conservée. Sinon, elle est supprimée. On renvoit
+un tableau au format DataFrame qui contient des colonnes correspondant
+aux différentes phases que l'on souhaite observer, et pour lesquelles on
+a une succession de dates d'observation possible.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{196}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{constraintes}\PY{p}{(}\PY{n}{amount}\PY{p}{,} \PY{n}{minimum}\PY{p}{,} \PY{n}{periode}\PY{p}{,} \PY{n}{phases}\PY{p}{)} \PY{p}{:}
+    
+    \PY{c+c1}{\PYZsh{}On définit les données relatives à l\PYZsq{}observatoire et à notre étoile}
+    \PY{n}{T5} \PY{o}{=} \PY{n}{EarthLocation}\PY{p}{(}\PY{n}{lat} \PY{o}{=} \PY{l+m+mf}{32.9} \PY{o}{*} \PY{n}{u}\PY{o}{.}\PY{n}{deg}\PY{p}{,} \PY{n}{lon} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{105.5} \PY{o}{*} \PY{n}{u}\PY{o}{.}\PY{n}{deg}\PY{p}{,} \PY{n}{height} \PY{o}{=} \PY{l+m+mi}{2225} \PY{o}{*} \PY{n}{u}\PY{o}{.}\PY{n}{m}\PY{p}{)}
+    \PY{n}{observatoire} \PY{o}{=} \PY{n}{Observer}\PY{p}{(}\PY{n}{location} \PY{o}{=} \PY{n}{T5}\PY{p}{,} \PY{n}{name} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{T5}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{target} \PY{o}{=} \PY{n}{FixedTarget}\PY{o}{.}\PY{n}{from\PYZus{}name}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DU BOO}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{}On définit nos contraintes}
+    \PY{n}{constraints} \PY{o}{=} \PY{p}{[}\PY{n}{AtNightConstraint}\PY{o}{.}\PY{n}{twilight\PYZus{}astronomical}\PY{p}{(}\PY{p}{)}\PY{p}{,}
+                  \PY{n}{MoonSeparationConstraint}\PY{p}{(}\PY{n+nb}{min} \PY{o}{=} \PY{l+m+mi}{30} \PY{o}{*}\PY{n}{u}\PY{o}{.}\PY{n}{deg}\PY{p}{)}\PY{p}{,}
+                  \PY{n}{AltitudeConstraint}\PY{p}{(}\PY{n+nb}{min} \PY{o}{=} \PY{l+m+mi}{30}\PY{o}{*} \PY{n}{u}\PY{o}{.}\PY{n}{deg}\PY{p}{)}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{}On convertit les entrée au format Time}
+    \PY{n}{start\PYZus{}min} \PY{o}{=} \PY{n}{Time}\PY{p}{(}\PY{n}{minimum}\PY{p}{,} \PY{n+nb}{format} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{jd}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{period} \PY{o}{=} \PY{n}{TimeDelta}\PY{p}{(}\PY{n}{periode}\PY{p}{,} \PY{n+nb}{format} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{jd}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{}On crée un tableau vide au format Time, et un tableau correspondant qui contiendra l\PYZsq{}information}
+    \PY{c+c1}{\PYZsh{}sur les contraintes}
+    \PY{n}{time} \PY{o}{=} \PY{n}{Time}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{ones}\PY{p}{(}\PY{p}{(}\PY{n}{amount}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{phases}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n+nb}{format} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{jd}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{ok} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros\PYZus{}like}\PY{p}{(}\PY{n}{time}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{}On vérifie les contraintes}
+    \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n+nb}{range} \PY{p}{(}\PY{n}{amount}\PY{p}{)} \PY{p}{:}
+        \PY{n}{time}\PY{p}{[}\PY{n}{n}\PY{p}{]} \PY{o}{=} \PY{n}{start\PYZus{}min} \PY{o}{+} \PY{n}{periode} \PY{o}{*} \PY{p}{(}\PY{n}{phases} \PY{o}{+} \PY{n}{n}\PY{p}{)}
+        
+        \PY{n}{ok}\PY{p}{[}\PY{n}{n}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{logical\PYZus{}and}\PY{p}{(}\PY{n}{constraints}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{(}\PY{n}{observatoire}\PY{p}{,} \PY{n}{target}\PY{p}{,} \PY{n}{times} \PY{o}{=} \PY{n}{time}\PY{p}{[}\PY{n}{n}\PY{p}{]}\PY{p}{)} \PY{o}{==} \PY{k+kc}{True}\PY{p}{,} 
+                               \PY{n}{np}\PY{o}{.}\PY{n}{logical\PYZus{}and}\PY{p}{(}\PY{n}{constraints}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{(}\PY{n}{observatoire}\PY{p}{,} \PY{n}{target}\PY{p}{,} \PY{n}{times} \PY{o}{=} \PY{n}{time}\PY{p}{[}\PY{n}{n}\PY{p}{]}\PY{p}{)} \PY{o}{==} \PY{k+kc}{True}\PY{p}{,}
+                                              \PY{n}{constraints}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{(}\PY{n}{observatoire}\PY{p}{,} \PY{n}{target}\PY{p}{,} \PY{n}{times} \PY{o}{=} \PY{n}{time}\PY{p}{[}\PY{n}{n}\PY{p}{]}\PY{p}{)} \PY{o}{==} \PY{k+kc}{True}\PY{p}{)}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{}On se replace à l\PYZsq{}heure = UTC \PYZhy{} 7}
+    \PY{n}{time} \PY{o}{=} \PY{n}{time} \PY{o}{\PYZhy{}} \PY{l+m+mi}{7} \PY{o}{*} \PY{n}{u}\PY{o}{.}\PY{n}{hour}
+    
+    \PY{c+c1}{\PYZsh{}On extrait un array de notre tableau time, au format de dates iso}
+    \PY{n}{time\PYZus{}obs} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{iso}
+    
+    \PY{c+c1}{\PYZsh{}On transforme l\PYZsq{}array en un dataFrame}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{time\PYZus{}obs}\PY{p}{,} \PY{n}{columns}\PY{o}{=}\PY{n}{phases}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{}On supprime les entrées la où les contraintes ne sont pas respectées    }
+    \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{ok} \PY{o}{!=} \PY{k+kc}{False}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{df}
+    
+\end{Verbatim}
+\end{tcolorbox}
+
+    Afin de déterminer les phases que l'on souhaite observer, on utilise les
+données disponible sur
+\href{'http://cdsarc.u-strasbg.fr/viz-bin/vizExec/Vgraph?I/239/70240\&P=1.0558882\&P=1.0558882'}{le
+site de l'université de strasbourg} On trace un graphique de ces
+données, que l'on décale afin de placer le début de la période au milieu
+du minimum principal de luminosité. On place ensuite les 15 points
+d'observations, d'abord en séparant uniformément la période, puis en
+ajustant afin d'avoir des points coincidant avec les maximas et minimas.
+On a alors la liste des phases que l'on souhaite observer
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ephe} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{data/luminosite}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{delimiter} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{skiprows} \PY{o}{=} \PY{l+m+mi}{6}\PY{p}{,} \PY{n}{header} \PY{o}{=} \PY{k+kc}{None}\PY{p}{,}
+                   \PY{n}{names} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{luminosite}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{erreur}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{lum} \PY{o}{=} \PY{n}{ephe}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+\PY{n}{lum}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{lum}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{+}\PY{l+m+mi}{1}
+\PY{n}{lum}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+      phase      luminosite  erreur
+0  1.239611 NaN      8.7616   0.018
+1  1.582669 NaN      8.6570   0.017
+2  1.596250 NaN      8.6454   0.017
+3  1.666863 NaN      8.5992   0.015
+4  1.279503 NaN      8.7985   0.012
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{167}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{dpi} \PY{o}{=} \PY{l+m+mi}{300}\PY{p}{,} \PY{n}{figsize} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{)}\PY{p}{,} \PY{n}{sharey} \PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(a)}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{ephe}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{ephe}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{luminosite}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{fmt} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{yerr} \PY{o}{=} \PY{n}{ephe}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{erreur}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+            \PY{n}{capsize} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{xaxis}\PY{o}{.}\PY{n}{set\PYZus{}major\PYZus{}locator}\PY{p}{(}\PY{n}{MultipleLocator}\PY{p}{(}\PY{l+m+mf}{0.1}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{n}{which} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{both}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}xlim}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{l+m+mf}{8.5}\PY{p}{,} \PY{l+m+mf}{9.3}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Magnitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(b)}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{lum}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m+mf}{0.395}\PY{p}{,} \PY{n}{lum}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{luminosite}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{fmt} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{yerr} \PY{o}{=} \PY{n}{lum}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{erreur}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+            \PY{n}{capsize} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,}  \PY{n}{c} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{ephe}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m+mf}{0.395}\PY{p}{,} \PY{n}{ephe}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{luminosite}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{fmt} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{yerr} \PY{o}{=} \PY{n}{ephe}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{erreur}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+            \PY{n}{capsize} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{xaxis}\PY{o}{.}\PY{n}{set\PYZus{}major\PYZus{}locator}\PY{p}{(}\PY{n}{MultipleLocator}\PY{p}{(}\PY{l+m+mf}{0.1}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{n}{which} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{both}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}xlim}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{l+m+mf}{8.5}\PY{p}{,} \PY{l+m+mf}{9.3}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{fig}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{fig}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{figures/cds\PYZus{}luminosite\PYZus{}centree.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Calcul dates d'observation du boo_files/Calcul dates d'observation du boo_5_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{156}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{phases} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{16}\PY{p}{)}
+\PY{n}{phases}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{8}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{p}{[}\PY{l+m+mf}{0.52} \PY{p}{,} \PY{l+m+mf}{0.59}\PY{p}{,} \PY{l+m+mf}{0.67}\PY{p}{,}\PY{l+m+mf}{0.76}\PY{p}{,} \PY{l+m+mf}{0.83}\PY{p}{,} \PY{l+m+mf}{0.91}\PY{p}{,} \PY{l+m+mf}{0.98}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{]}
+
+
+\PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{dpi} \PY{o}{=} \PY{l+m+mi}{300}\PY{p}{,} \PY{n}{figsize} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{)}\PY{p}{)}
+
+
+
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{lum}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m+mf}{0.395}\PY{p}{,} \PY{n}{lum}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{luminosite}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{fmt} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{yerr} \PY{o}{=} \PY{n}{lum}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{erreur}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+            \PY{n}{capsize} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,}  \PY{n}{c} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}\PY{n}{ephe}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m+mf}{0.395}\PY{p}{,} \PY{n}{ephe}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{luminosite}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{fmt} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{yerr} \PY{o}{=} \PY{n}{ephe}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{erreur}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+            \PY{n}{capsize} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,} \PY{n}{c} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{vlines}\PY{p}{(}\PY{n}{phases}\PY{p}{,} \PY{l+m+mf}{8.4}\PY{p}{,} \PY{l+m+mf}{9.5}\PY{p}{,} \PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Phases d}\PY{l+s+se}{\PYZbs{}\PYZsq{}}\PY{l+s+s1}{observation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+
+
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlim}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Phase}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{l+m+mf}{8.4}\PY{p}{,} \PY{l+m+mf}{9.5}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Magnitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xticks}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{around}\PY{p}{(}\PY{n}{phases}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{fig}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{fig}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{figures/cds\PYZus{}luminosite\PYZus{}centree\PYZus{}phases}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Calcul dates d'observation du boo_files/Calcul dates d'observation du boo_6_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    On initialise une variable contenant la période de l'étoile variable,
+ainsi qu'une variable contenant la date en jour julien correspondant au
+milieu de son minimum de luminosité, d'après l'éphéméride
+\href{'https://www.aavso.org/vsx/index.php?view=detail.ephemeris\&nolayout=1\&oid=4446'}{disponible
+ici} De plus, on crée un array contenant les différentes phases de
+l'étoile que l'on souhaite observer. Il faut noter que le début de la
+période est ici choisie en le minimum de luminosité de l'étoile.
+
+On envoie alors ces données dans notre fonction contraintes(), qui nous
+renvoie un tableau au format DataFrame, contenant une liste de dates
+pour lesquelles les contraintes que l'on a choisies sont respectées.
+Attention les dates sont à l'heure locale ! UTC - 7
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{201}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{minimum} \PY{o}{=} \PY{l+m+mf}{2458893.438}
+\PY{n}{periode} \PY{o}{=} \PY{l+m+mf}{1.0558882}
+
+\PY{c+c1}{\PYZsh{}On avance dans le temps jusqu\PYZsq{}à ce que la date indiqué pour le minimum soit postérieure à la date}
+\PY{c+c1}{\PYZsh{}actuelle}
+\PY{n}{today} \PY{o}{=} \PY{n}{Time}\PY{p}{(}\PY{n}{datetime}\PY{o}{.}\PY{n}{utcnow}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n+nb}{format} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{datetime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{while} \PY{n}{minimum} \PY{o}{\PYZlt{}} \PY{n}{today}\PY{o}{.}\PY{n}{jd} \PY{p}{:}
+    \PY{n}{minimum} \PY{o}{=} \PY{n}{minimum} \PY{o}{+} \PY{n}{periode}
+    
+\PY{n}{dates} \PY{o}{=} \PY{n}{constraintes}\PY{p}{(}\PY{l+m+mi}{50}\PY{p}{,} \PY{n}{minimum}\PY{p}{,} \PY{n}{periode}\PY{p}{,} \PY{n}{phases}\PY{p}{)}
+\PY{n}{dates}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{201}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+                  0.000000 0.066667 0.133333 0.200000 0.266667 0.333333  \textbackslash{}
+0  2020-02-23 03:35:01.864      NaN      NaN      NaN      NaN      NaN
+1  2020-02-24 04:55:30.605      NaN      NaN      NaN      NaN      NaN
+2                      NaN      NaN      NaN      NaN      NaN      NaN
+3                      NaN      NaN      NaN      NaN      NaN      NaN
+4                      NaN      NaN      NaN      NaN      NaN      NaN
+
+  0.400000 0.466667 0.520000                 0.590000  \textbackslash{}
+0      NaN      NaN      NaN                      NaN
+1      NaN      NaN      NaN                      NaN
+2      NaN      NaN      NaN                      NaN
+3      NaN      NaN      NaN                      NaN
+4      NaN      NaN      NaN  2020-02-27 23:54:01.783
+
+                  0.670000                 0.760000                 0.830000  \textbackslash{}
+0                      NaN                      NaN  2020-02-24 00:37:01.719
+1                      NaN  2020-02-25 00:11:04.448  2020-02-25 01:57:30.460
+2  2020-02-25 23:14:42.602  2020-02-26 01:31:33.188  2020-02-26 03:17:59.200
+3  2020-02-27 00:35:11.342  2020-02-27 02:52:01.929  2020-02-27 04:38:27.941
+4  2020-02-28 01:55:40.083  2020-02-28 04:12:30.669                      NaN
+
+                  0.910000                 0.980000                 1.000000
+0  2020-02-24 02:38:40.018  2020-02-24 04:25:06.030  2020-02-24 04:55:30.605
+1  2020-02-25 03:59:08.759                      NaN                      NaN
+2                      NaN                      NaN                      NaN
+3                      NaN                      NaN                      NaN
+4                      NaN                      NaN                      NaN
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Il y a beaucoup de trous dans ce tableau. La cellule suivante permet de
+le nettoyer, et de supprimer toutes les entrées nulles.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{210}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{data} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{i}\PY{p}{,}\PY{n}{phase} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{dates}\PY{p}{)}\PY{p}{)} \PY{p}{:}
+    \PY{n}{data}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{dates}\PY{p}{[}\PY{n}{phase}\PY{p}{]}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{values}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{dates\PYZus{}sort} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{data} \PY{o}{=} \PY{n}{data}\PY{p}{,} \PY{n}{index} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{around}\PY{p}{(}\PY{n}{phases}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}
+\PY{n}{dates\PYZus{}sort} \PY{o}{=} \PY{n}{dates\PYZus{}sort}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+\PY{n}{dates\PYZus{}sort}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{210}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+                      0.000                    0.067                    0.133  \textbackslash{}
+0   2020-02-23 03:35:01.864  2020-03-07 22:42:37.407  2020-03-06 23:03:30.582
+1   2020-02-24 04:55:30.605  2020-03-09 00:03:06.147  2020-03-08 00:23:59.323
+2   2020-03-08 22:21:44.231  2020-03-10 01:23:34.888  2020-03-09 01:44:28.063
+3   2020-03-09 23:42:12.972  2020-03-11 02:44:03.628  2020-03-10 03:04:56.804
+4   2020-03-11 01:02:41.712  2020-03-12 04:04:32.369  2020-03-11 04:25:25.544
+5   2020-03-12 02:23:10.453  2020-03-25 21:30:45.995  2020-03-24 21:51:39.170
+6   2020-03-13 03:43:39.193  2020-03-26 22:51:14.735  2020-03-25 23:12:07.911
+7   2020-03-26 21:09:52.819  2020-03-28 00:11:43.476  2020-03-27 00:32:36.651
+8   2020-03-27 22:30:21.560  2020-03-29 01:32:12.216  2020-03-28 01:53:05.392
+9   2020-03-28 23:50:50.300  2020-03-30 02:52:40.957  2020-03-29 03:13:34.132
+10  2020-03-30 01:11:19.041  2020-03-31 04:13:09.697  2020-04-11 20:39:47.759
+11  2020-03-31 02:31:47.781  2020-04-12 20:18:54.583  2020-04-12 22:00:16.499
+12  2020-04-01 03:52:16.522  2020-04-13 21:39:23.324  2020-04-13 23:20:45.240
+13  2020-04-13 19:58:01.408  2020-04-14 22:59:52.064  2020-04-15 00:41:13.980
+14  2020-04-14 21:18:30.148                     None                     None
+15                     None                     None                     None
+16                     None                     None                     None
+
+                      0.200                    0.267                    0.333  \textbackslash{}
+0   2020-03-05 23:24:23.758  2020-03-04 23:45:16.933  2020-03-02 22:45:41.368
+1   2020-03-07 00:44:52.498  2020-03-06 01:05:45.674  2020-03-04 00:06:10.109
+2   2020-03-08 02:05:21.239  2020-03-07 02:26:14.414  2020-03-05 01:26:38.849
+3   2020-03-09 03:25:49.979  2020-03-08 03:46:43.155  2020-03-06 02:47:07.590
+4   2020-03-10 04:46:18.720  2020-03-22 22:33:25.522  2020-03-07 04:07:36.330
+5   2020-03-23 22:12:32.346  2020-03-23 23:53:54.262  2020-03-20 21:33:49.957
+6   2020-03-24 23:33:01.086  2020-03-25 01:14:23.003  2020-03-21 22:54:18.697
+7   2020-03-26 00:53:29.827  2020-03-26 02:34:51.743  2020-03-23 00:14:47.438
+8   2020-03-27 02:13:58.567  2020-03-27 03:55:20.483  2020-03-24 01:35:16.178
+9   2020-03-28 03:34:27.308  2020-04-09 21:21:34.110  2020-03-25 02:55:44.919
+10  2020-04-10 21:00:40.934  2020-04-10 22:42:02.850  2020-03-26 04:16:13.659
+11  2020-04-11 22:21:09.675  2020-04-12 00:02:31.591  2020-04-07 20:21:58.545
+12  2020-04-12 23:41:38.415  2020-04-13 01:23:00.331  2020-04-08 21:42:27.285
+13  2020-04-14 01:02:07.156  2020-04-14 02:43:29.072  2020-04-09 23:02:56.026
+14  2020-04-15 02:22:35.896  2020-04-15 04:03:57.812  2020-04-11 00:23:24.766
+15                     None                     None  2020-04-12 01:43:53.507
+16                     None                     None  2020-04-13 03:04:22.247
+
+                      0.400                    0.467                    0.520  \textbackslash{}
+0   2020-03-01 23:06:34.544  2020-02-29 23:27:27.720  2020-02-28 23:28:04.512
+1   2020-03-03 00:27:03.284  2020-03-02 00:47:56.460  2020-03-01 00:48:33.252
+2   2020-03-04 01:47:32.025  2020-03-03 02:08:25.201  2020-03-02 02:09:01.993
+3   2020-03-05 03:08:00.765  2020-03-04 03:28:53.941  2020-03-03 03:29:30.733
+4   2020-03-06 04:28:29.506  2020-03-05 04:49:22.681  2020-03-04 04:49:59.474
+5   2020-03-19 21:54:43.132  2020-03-18 22:15:36.308  2020-03-17 22:16:13.100
+6   2020-03-20 23:15:11.873  2020-03-19 23:36:05.048  2020-03-18 23:36:41.841
+7   2020-03-22 00:35:40.613  2020-03-21 00:56:33.789  2020-03-20 00:57:10.581
+8   2020-03-23 01:56:09.354  2020-03-22 02:17:02.529  2020-03-21 02:17:39.322
+9   2020-03-24 03:16:38.094  2020-03-23 03:37:31.270  2020-03-22 03:38:08.062
+10  2020-04-06 20:42:51.720  2020-04-05 21:03:44.896  2020-04-04 21:04:21.688
+11  2020-04-07 22:03:20.461  2020-04-06 22:24:13.636  2020-04-05 22:24:50.429
+12  2020-04-08 23:23:49.201  2020-04-07 23:44:42.377  2020-04-06 23:45:19.169
+13  2020-04-10 00:44:17.942  2020-04-09 01:05:11.117  2020-04-08 01:05:47.910
+14  2020-04-11 02:04:46.682  2020-04-10 02:25:39.858  2020-04-09 02:26:16.650
+15  2020-04-12 03:25:15.423  2020-04-11 03:46:08.598  2020-04-10 03:46:45.391
+16                     None                     None                     None
+
+                      0.590                    0.670                    0.760  \textbackslash{}
+0   2020-02-27 23:54:01.783  2020-02-25 23:14:42.602  2020-02-25 00:11:04.448
+1   2020-02-29 01:14:30.524  2020-02-27 00:35:11.342  2020-02-26 01:31:33.188
+2   2020-03-01 02:34:59.264  2020-02-28 01:55:40.083  2020-02-27 02:52:01.929
+3   2020-03-02 03:55:28.005  2020-02-29 03:16:08.823  2020-02-28 04:12:30.669
+4   2020-03-16 22:42:10.371  2020-03-01 04:36:37.563  2020-03-13 22:59:13.036
+5   2020-03-18 00:02:39.112  2020-03-14 22:02:51.190  2020-03-15 00:19:41.776
+6   2020-03-19 01:23:07.852  2020-03-15 23:23:19.930  2020-03-16 01:40:10.517
+7   2020-03-20 02:43:36.593  2020-03-17 00:43:48.671  2020-03-17 03:00:39.257
+8   2020-03-21 04:04:05.333  2020-03-18 02:04:17.411  2020-03-18 04:21:07.998
+9   2020-04-03 21:30:18.960  2020-03-19 03:24:46.152  2020-03-31 21:47:21.624
+10  2020-04-04 22:50:47.700  2020-04-01 20:50:59.778  2020-04-01 23:07:50.365
+11  2020-04-06 00:11:16.441  2020-04-02 22:11:28.518  2020-04-03 00:28:19.105
+12  2020-04-07 01:31:45.181  2020-04-03 23:31:57.259  2020-04-04 01:48:47.845
+13  2020-04-08 02:52:13.922  2020-04-05 00:52:25.999  2020-04-05 03:09:16.586
+14  2020-04-09 04:12:42.662  2020-04-06 02:12:54.740                     None
+15                     None  2020-04-07 03:33:23.480                     None
+16                     None                     None                     None
+
+                      0.830                    0.910                    0.980  \textbackslash{}
+0   2020-02-24 00:37:01.719  2020-02-24 02:38:40.018  2020-02-24 04:25:06.030
+1   2020-02-25 01:57:30.460  2020-02-25 03:59:08.759  2020-03-09 23:11:48.397
+2   2020-02-26 03:17:59.200  2020-03-10 22:45:51.126  2020-03-11 00:32:17.137
+3   2020-02-27 04:38:27.941  2020-03-12 00:06:19.866  2020-03-12 01:52:45.878
+4   2020-03-11 22:04:41.567  2020-03-13 01:26:48.606  2020-03-13 03:13:14.618
+5   2020-03-12 23:25:10.307  2020-03-14 02:47:17.347  2020-03-14 04:33:43.359
+6   2020-03-14 00:45:39.048  2020-03-15 04:07:46.087  2020-03-27 21:59:56.985
+7   2020-03-15 02:06:07.788  2020-03-28 21:33:59.714  2020-03-28 23:20:25.725
+8   2020-03-16 03:26:36.529  2020-03-29 22:54:28.454  2020-03-30 00:40:54.466
+9   2020-03-29 20:52:50.155  2020-03-31 00:14:57.195  2020-03-31 02:01:23.206
+10  2020-03-30 22:13:18.895  2020-04-01 01:35:25.935  2020-04-01 03:21:51.947
+11  2020-03-31 23:33:47.636  2020-04-02 02:55:54.676  2020-04-14 20:48:05.573
+12  2020-04-02 00:54:16.376  2020-04-03 04:16:23.416  2020-04-15 22:08:34.314
+13  2020-04-03 02:14:45.117  2020-04-15 20:22:08.302                     None
+14  2020-04-04 03:35:13.857                     None                     None
+15                     None                     None                     None
+16                     None                     None                     None
+
+                      1.000
+0   2020-02-24 04:55:30.605
+1   2020-03-08 22:21:44.231
+2   2020-03-09 23:42:12.972
+3   2020-03-11 01:02:41.712
+4   2020-03-12 02:23:10.453
+5   2020-03-13 03:43:39.193
+6   2020-03-26 21:09:52.819
+7   2020-03-27 22:30:21.560
+8   2020-03-28 23:50:50.300
+9   2020-03-30 01:11:19.041
+10  2020-03-31 02:31:47.781
+11  2020-04-01 03:52:16.522
+12  2020-04-13 19:58:01.408
+13  2020-04-14 21:18:30.148
+14  2020-04-15 22:38:58.888
+15                     None
+16                     None
+\end{Verbatim}
+\end{tcolorbox}
+        
+    On exporte ensuite notre tableau au format csv, pour pouvoir ensuite le
+lire facilement sur n'importe quel tableur, ou réimporter facilement le
+fichier dans python
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{207}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dates\PYZus{}sort}\PY{o}{.}\PY{n}{to\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{data/dates.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
